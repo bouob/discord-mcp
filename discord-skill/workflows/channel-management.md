@@ -23,6 +23,8 @@
 | set_positions | Bulk set positions | positions[] |
 | set_private | Set privacy | channelId, private |
 
+> **Note**: `position` accepts both number (`0`) and string (`"0"`).
+
 ## Queries via `discord_query`
 
 | Resource | Filters | Description |

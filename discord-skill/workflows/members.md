@@ -14,6 +14,8 @@
 | members | guildId, limit, after | List members |
 | member | guildId, userId | Get member info |
 
+> **Note**: `limit` accepts both number (`100`) and string (`"100"`).
+
 ## Examples
 
 ### Edit member nickname

@@ -11,6 +11,8 @@
 | add_to_member | Assign role to member | userId, roleId |
 | remove_from_member | Remove role from member | userId, roleId |
 
+> **Note**: `position` in set_positions accepts both number (`5`) and string (`"5"`).
+
 ## Queries via `discord_query`
 
 | Resource | Filters | Description |

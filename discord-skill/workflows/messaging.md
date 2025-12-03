@@ -18,12 +18,12 @@
 
 | Resource | Filters | Description |
 |----------|---------|-------------|
-| message_history | channelId, count (string), before, after | Full message history with pagination |
-| messages | channelId, count (string) | Read recent messages |
+| message_history | channelId, count/limit, before, after | Full message history with pagination |
+| messages | channelId, count/limit | Read recent messages |
 | pinned_messages | channelId | Get pinned messages |
 | attachments | channelId, messageId | Get message attachments |
 
-> **⚠️ Important**: `count` must be a **string**, e.g., `"30"` not `30`
+> **Note**: `count` accepts both number (`30`) and string (`"30"`). You can also use `limit` as an alias for `count`.
 
 ## Examples
 
@@ -80,7 +80,7 @@
   "resource": "message_history",
   "filters": {
     "channelId": "123456789",
-    "count": "100",
+    "limit": 100,
     "before": "last_message_id"
   }
 }
@@ -92,7 +92,7 @@
   "resource": "messages",
   "filters": {
     "channelId": "123456789",
-    "count": "30"
+    "limit": 30
   }
 }
 ```
