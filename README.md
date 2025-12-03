@@ -72,8 +72,48 @@ npm start
 ### Development Mode
 
 ```bash
-npm run dev
+npm run dev          # Hybrid mode (3 tools)
+npm run dev:legacy   # Legacy mode (93 tools)
 ```
+
+### Claude 配置 (v2.0.0+)
+
+#### Step 1: MCP Server 設定
+
+編輯 `~/.claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "discord": {
+      "command": "node",
+      "args": ["/path/to/discord-mcp/dist/index-hybrid.js"],
+      "env": {
+        "DISCORD_TOKEN": "your_bot_token",
+        "DISCORD_GUILD_ID": "your_guild_id"
+      }
+    }
+  }
+}
+```
+
+#### Step 2: 安裝 Skill (可選但推薦)
+
+Skill 提供漸進式文件載入，幫助 Claude 更好地使用工具：
+
+```bash
+# 使用安裝腳本
+./scripts/install-skill.sh
+
+# 或手動複製
+cp -r discord-skill ~/.claude/skills/discord-skill
+```
+
+#### Step 3: 重新啟動 Claude
+
+重啟後 Claude 會：
+1. 載入 MCP Server（3 個核心工具）
+2. 自動發現 Skill 文件（按需載入）
 
 ## Configuration
 
