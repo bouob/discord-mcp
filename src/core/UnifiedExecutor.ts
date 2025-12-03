@@ -284,7 +284,7 @@ export class UnifiedExecutor {
     // This maps method names to their expected parameter order
     const parameterOrders: Record<string, string[]> = {
       // Message operations
-      sendMessage: ['channelId', 'message'],
+      sendMessage: ['channelId', 'message', 'message_reference'],
       editMessage: ['channelId', 'messageId', 'newMessage'],
       deleteMessage: ['channelId', 'messageId'],
       readMessages: ['channelId', 'count'],

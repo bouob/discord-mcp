@@ -20,9 +20,17 @@ export const GetServerWidgetSchema = z.object({
 // MESSAGE MANAGEMENT SCHEMAS
 // =============================================================================
 
+export const MessageReferenceSchema = z.object({
+  message_id: z.string().describe("ID of the message to reply to"),
+  channel_id: z.string().optional().describe("Channel ID (optional, defaults to current channel)"),
+  guild_id: z.string().optional().describe("Guild ID (optional)"),
+  fail_if_not_exists: z.boolean().optional().describe("Whether to error if the referenced message doesn't exist (default: true)")
+});
+
 export const SendMessageSchema = z.object({
   channelId: z.string().describe("Discord channel ID"),
-  message: z.string().describe("Message content")
+  message: z.string().describe("Message content"),
+  message_reference: MessageReferenceSchema.optional().describe("Reference to a message to reply to")
 });
 
 export const EditMessageSchema = z.object({
