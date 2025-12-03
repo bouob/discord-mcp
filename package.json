@@ -1,16 +1,19 @@
 {
   "name": "discord-mcp",
-  "version": "0.0.1",
-  "description": "Model Context Protocol (MCP) server for Discord API integration",
-  "main": "dist/index.js",
+  "version": "2.0.0",
+  "description": "Model Context Protocol (MCP) server for Discord API integration - Hybrid Architecture",
+  "main": "dist/index-hybrid.js",
   "type": "module",
   "bin": {
-    "discord-mcp": "./dist/index.js"
+    "discord-mcp": "./dist/index-hybrid.js",
+    "discord-mcp-legacy": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/index.ts",
-    "start": "node dist/index.js",
+    "dev": "tsx src/index-hybrid.ts",
+    "dev:legacy": "tsx src/index.ts",
+    "start": "node dist/index-hybrid.js",
+    "start:legacy": "DISCORD_MCP_LEGACY=true node dist/index-hybrid.js",
     "prepare": "npm run build"
   },
   "repository": {
