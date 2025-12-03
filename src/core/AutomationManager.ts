@@ -53,9 +53,9 @@ export class AutomationManager {
   }
 
   // Message Management
-  async sendMessage(channelId: string, message: string): Promise<string> {
-    const parsed = schemas.SendMessageSchema.parse({ channelId, message });
-    return await this.discordService.sendMessage(parsed.channelId, parsed.message);
+  async sendMessage(channelId: string, message: string, messageReference?: { message_id: string; channel_id?: string; guild_id?: string; fail_if_not_exists?: boolean }): Promise<string> {
+    const parsed = schemas.SendMessageSchema.parse({ channelId, message, message_reference: messageReference });
+    return await this.discordService.sendMessage(parsed.channelId, parsed.message, parsed.message_reference);
   }
 
   async editMessage(channelId: string, messageId: string, newMessage: string): Promise<string> {

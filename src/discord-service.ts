@@ -165,16 +165,28 @@ Boosts:
   }
 
   // Message Management Tools
-  async sendMessage(channelId: string, message: string): Promise<string> {
+  async sendMessage(channelId: string, message: string, messageReference?: { message_id: string; channel_id?: string; guild_id?: string; fail_if_not_exists?: boolean }): Promise<string> {
     this.ensureReady();
-    
+
     const channel = this.client.channels.cache.get(channelId) as TextChannel;
     if (!channel || channel.type !== ChannelType.GuildText) {
       throw new Error("Channel not found by channelId");
     }
 
-    const sentMessage = await channel.send(message);
-    return `Message sent successfully. Message link: ${sentMessage.url}`;
+    const sendOptions: { content: string; reply?: { messageReference: string; failIfNotExists?: boolean } } = {
+      content: message
+    };
+
+    if (messageReference) {
+      sendOptions.reply = {
+        messageReference: messageReference.message_id,
+        failIfNotExists: messageReference.fail_if_not_exists ?? true
+      };
+    }
+
+    const sentMessage = await channel.send(sendOptions);
+    const replyInfo = messageReference ? ' (reply)' : '';
+    return `Message sent successfully${replyInfo}. Message link: ${sentMessage.url}`;
   }
 
   async editMessage(channelId: string, messageId: string, newMessage: string): Promise<string> {

@@ -153,7 +153,7 @@ export const OPERATION_HELP: Record<string, { description: string; actions: Reco
   message: {
     description: 'Message operations in channels',
     actions: {
-      send: 'Send a message. Params: channelId, content',
+      send: 'Send a message. Params: channelId, content, message_reference? (for replies: {message_id})',
       edit: 'Edit a message. Params: channelId, messageId, content',
       delete: 'Delete a message. Params: channelId, messageId',
       bulk_delete: 'Delete multiple messages. Params: channelId, messageIds[]',
