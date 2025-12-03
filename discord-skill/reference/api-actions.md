@@ -5,7 +5,7 @@
 ### message
 | Action | Params | Description |
 |--------|--------|-------------|
-| send | channelId, content, [embed, components] | Send message |
+| send | channelId, content, [message_reference, embed, components] | Send message (use message_reference: {message_id} for replies) |
 | edit | channelId, messageId, content | Edit message |
 | delete | channelId, messageId | Delete message |
 | bulk_delete | channelId, messageIds[] | Bulk delete (max 100) |
