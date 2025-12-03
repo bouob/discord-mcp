@@ -36,6 +36,16 @@ This skill teaches Claude how to use the streamlined Discord MCP for server mana
 | server | Server settings and stats | [workflows/server-admin.md](workflows/server-admin.md) |
 | voice | Voice channels and audio | [workflows/voice.md](workflows/voice.md) |
 | moderation | Auto-mod and security | [workflows/moderation.md](workflows/moderation.md) |
+| webhook | Webhook management | [workflows/webhooks.md](workflows/webhooks.md) |
+| event | Server events | [workflows/events.md](workflows/events.md) |
+
+## Reference Documentation
+
+| Document | Description |
+|----------|-------------|
+| [API Actions](reference/api-actions.md) | Complete list of all actions |
+| [Permissions](reference/permissions.md) | Discord permissions reference |
+| [Error Codes](reference/error-codes.md) | Error handling guide |
 
 ## Quick Examples
 
