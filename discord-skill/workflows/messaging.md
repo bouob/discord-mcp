@@ -18,9 +18,12 @@
 
 | Resource | Filters | Description |
 |----------|---------|-------------|
-| messages | channelId, limit, before, after | Get message history |
+| message_history | channelId, count (string), before, after | Full message history with pagination |
+| messages | channelId, count (string) | Read recent messages |
 | pinned_messages | channelId | Get pinned messages |
 | attachments | channelId, messageId | Get message attachments |
+
+> **⚠️ Important**: `count` must be a **string**, e.g., `"30"` not `30`
 
 ## Examples
 
@@ -74,11 +77,22 @@
 ### Query message history
 ```json
 {
+  "resource": "message_history",
+  "filters": {
+    "channelId": "123456789",
+    "count": "100",
+    "before": "last_message_id"
+  }
+}
+```
+
+### Read recent messages
+```json
+{
   "resource": "messages",
   "filters": {
     "channelId": "123456789",
-    "limit": 100,
-    "before": "last_message_id"
+    "count": "30"
   }
 }
 ```
