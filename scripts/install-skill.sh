@@ -1,53 +1,53 @@
 #!/bin/bash
-# Discord MCP Skill 安裝腳本
-# 將 Skill 複製到 Claude 的 skills 目錄
+# Discord MCP Skill Installation Script
+# Copies the Skill to Claude's skills directory
 
 set -e
 
-# 取得腳本所在目錄
+# Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 SKILL_SOURCE="$PROJECT_DIR/discord-skill"
 
-# Claude skills 目錄
+# Claude skills directory
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 
-echo "=== Discord MCP Skill 安裝程式 ==="
+echo "=== Discord MCP Skill Installer ==="
 echo ""
 
-# 檢查 skill 來源是否存在
+# Check if skill source exists
 if [ ! -d "$SKILL_SOURCE" ]; then
-    echo "錯誤: 找不到 discord-skill 目錄: $SKILL_SOURCE"
+    echo "Error: discord-skill directory not found: $SKILL_SOURCE"
     exit 1
 fi
 
-# 創建 Claude skills 目錄
+# Create Claude skills directory
 if [ ! -d "$CLAUDE_SKILLS_DIR" ]; then
-    echo "創建 Claude skills 目錄: $CLAUDE_SKILLS_DIR"
+    echo "Creating Claude skills directory: $CLAUDE_SKILLS_DIR"
     mkdir -p "$CLAUDE_SKILLS_DIR"
 fi
 
-# 複製或更新 skill
+# Copy or update skill
 SKILL_DEST="$CLAUDE_SKILLS_DIR/discord-skill"
 
 if [ -d "$SKILL_DEST" ]; then
-    echo "更新現有的 discord-skill..."
+    echo "Updating existing discord-skill..."
     rm -rf "$SKILL_DEST"
 else
-    echo "安裝 discord-skill..."
+    echo "Installing discord-skill..."
 fi
 
 cp -r "$SKILL_SOURCE" "$SKILL_DEST"
 
 echo ""
-echo "✅ Skill 安裝完成!"
+echo "✅ Skill installation complete!"
 echo ""
-echo "安裝位置: $SKILL_DEST"
+echo "Installation path: $SKILL_DEST"
 echo ""
-echo "接下來請確認 MCP Server 設定:"
+echo "Next, configure your MCP Server:"
 echo ""
-echo "1. 編輯 ~/.claude/claude_desktop_config.json"
-echo "2. 添加以下設定:"
+echo "1. Edit ~/.claude/claude_desktop_config.json"
+echo "2. Add the following configuration:"
 echo ""
 cat << 'EOF'
 {
@@ -64,5 +64,5 @@ cat << 'EOF'
 }
 EOF
 echo ""
-echo "3. 重新啟動 Claude"
+echo "3. Restart Claude"
 echo ""

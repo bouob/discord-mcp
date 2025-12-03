@@ -1,34 +1,34 @@
-# Discord MCP + Skill 混合架構方案
+# Discord MCP + Skill Hybrid Architecture Proposal
 
-## 問題分析
+## Problem Analysis
 
-### 當前痛點
-| 問題 | 現況 | 影響 |
-|------|------|------|
-| Token 消耗 | 93 個工具 ≈ 17,200 tokens | 佔用 context window 8.6% |
-| 工具選擇準確度 | >50 工具時準確度下降 | Claude 選錯工具 |
-| 載入方式 | 全量預載 | 無法按需使用 |
+### Current Pain Points
+| Problem | Current State | Impact |
+|---------|---------------|--------|
+| Token consumption | 93 tools ≈ 17,200 tokens | Uses 8.6% of context window |
+| Tool selection accuracy | Decreases with >50 tools | Claude selects wrong tool |
+| Loading method | Full preload | Cannot load on-demand |
 
-## 混合架構設計
+## Hybrid Architecture Design
 
-### 核心理念
+### Core Concept
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Claude Context                        │
 ├─────────────────────────────────────────────────────────┤
-│  Skill (漸進式披露)          │  MCP (精簡核心)            │
-│  ├─ 元數據: ~100 tokens     │  ├─ 5-8 核心工具           │
-│  ├─ 指令: 按需載入          │  └─ ~2,000 tokens          │
-│  └─ 腳本: 不佔 context      │                            │
+│  Skill (Progressive Disclosure)  │  MCP (Streamlined)   │
+│  ├─ Metadata: ~100 tokens        │  ├─ 5-8 core tools   │
+│  ├─ Instructions: on-demand      │  └─ ~2,000 tokens    │
+│  └─ Scripts: no context cost     │                      │
 ├─────────────────────────────────────────────────────────┤
-│  總計: ~2,100 tokens (原本 17,200 tokens)               │
-│  減少: 88% token 消耗                                   │
+│  Total: ~2,100 tokens (was 17,200 tokens)               │
+│  Reduction: 88% token consumption                       │
 └─────────────────────────────────────────────────────────┘
 ```
 
-### MCP 精簡版：僅保留核心工具
+### Streamlined MCP: Core Tools Only
 
-**從 93 個工具精簡為 5-8 個通用工具：**
+**From 93 tools down to 5-8 universal tools:**
 
 ```typescript
 const CORE_TOOLS = [
@@ -90,66 +90,66 @@ const CORE_TOOLS = [
 ];
 ```
 
-### Skill 結構設計
+### Skill Structure Design
 
 ```
 discord-skill/
-├── SKILL.md                    # 主入口 (~100 tokens 元數據)
+├── SKILL.md                    # Main entry (~100 tokens metadata)
 │
-├── workflows/                  # 工作流程指令 (按需載入)
-│   ├── messaging.md           # 訊息操作指南
-│   ├── channel-management.md  # 頻道管理指南
-│   ├── moderation.md          # 審核管理指南
-│   ├── voice.md               # 語音功能指南
-│   └── server-admin.md        # 伺服器管理指南
+├── workflows/                  # Workflow guides (loaded on-demand)
+│   ├── messaging.md           # Messaging operations guide
+│   ├── channel-management.md  # Channel management guide
+│   ├── moderation.md          # Moderation management guide
+│   ├── voice.md               # Voice features guide
+│   └── server-admin.md        # Server administration guide
 │
-├── reference/                  # 參考資料 (僅在需要時讀取)
-│   ├── api-actions.md         # 完整 action 列表
-│   ├── permissions.md         # 權限對照表
-│   └── error-codes.md         # 錯誤代碼說明
+├── reference/                  # Reference docs (read only when needed)
+│   ├── api-actions.md         # Complete action list
+│   ├── permissions.md         # Permission reference table
+│   └── error-codes.md         # Error code explanations
 │
-└── scripts/                    # 執行腳本 (不佔 context)
-    ├── validate_params.py     # 參數驗證
-    ├── format_response.py     # 回應格式化
-    └── batch_operations.py    # 批次操作
+└── scripts/                    # Execution scripts (no context cost)
+    ├── validate_params.py     # Parameter validation
+    ├── format_response.py     # Response formatting
+    └── batch_operations.py    # Batch operations
 ```
 
-### SKILL.md 設計
+### SKILL.md Design
 
 ```markdown
 ---
 name: discord-operations
-description: Discord 伺服器管理與自動化操作指南
+description: Discord server management and automation guide
 version: 2.0.0
 triggers:
   - discord
-  - 伺服器
-  - 頻道
-  - 訊息
-  - 成員
+  - server
+  - channel
+  - message
+  - member
 ---
 
-# Discord 操作指南
+# Discord Operations Guide
 
-此 Skill 教導如何使用精簡版 Discord MCP 進行伺服器管理。
+This Skill teaches how to use the streamlined Discord MCP for server management.
 
-## 快速開始
+## Quick Start
 
-使用 `discord_execute` 執行操作，使用 `discord_query` 查詢資料。
+Use `discord_execute` to perform actions, use `discord_query` to query data.
 
-## 操作分類
+## Operation Categories
 
-| 類別 | 說明 | 詳細指南 |
-|------|------|----------|
-| 訊息 | 發送、編輯、刪除訊息 | [workflows/messaging.md](workflows/messaging.md) |
-| 頻道 | 創建、管理、組織頻道 | [workflows/channel-management.md](workflows/channel-management.md) |
-| 審核 | 自動審核、權限管理 | [workflows/moderation.md](workflows/moderation.md) |
-| 語音 | 語音頻道、音訊播放 | [workflows/voice.md](workflows/voice.md) |
-| 伺服器 | 伺服器設定、統計 | [workflows/server-admin.md](workflows/server-admin.md) |
+| Category | Description | Detailed Guide |
+|----------|-------------|----------------|
+| Message | Send, edit, delete messages | [workflows/messaging.md](workflows/messaging.md) |
+| Channel | Create, manage, organize channels | [workflows/channel-management.md](workflows/channel-management.md) |
+| Moderation | Auto-moderation, permissions | [workflows/moderation.md](workflows/moderation.md) |
+| Voice | Voice channels, audio playback | [workflows/voice.md](workflows/voice.md) |
+| Server | Server settings, statistics | [workflows/server-admin.md](workflows/server-admin.md) |
 
-## 基本用法
+## Basic Usage
 
-### 發送訊息
+### Send Message
 ```json
 {
   "tool": "discord_execute",
@@ -164,7 +164,7 @@ triggers:
 }
 ```
 
-### 查詢頻道列表
+### Query Channel List
 ```json
 {
   "tool": "discord_query",
@@ -175,14 +175,14 @@ triggers:
 }
 ```
 
-完整 action 列表請參考 [reference/api-actions.md](reference/api-actions.md)
+For complete action list, see [reference/api-actions.md](reference/api-actions.md)
 ```
 
-## 實施計劃
+## Implementation Plan
 
-### Phase 1: MCP 重構 (Week 1-2)
+### Phase 1: MCP Refactoring (Week 1-2)
 
-#### 1.1 創建統一執行層
+#### 1.1 Create Unified Execution Layer
 ```typescript
 // src/core/UnifiedExecutor.ts
 export class UnifiedExecutor {
@@ -196,48 +196,48 @@ export class UnifiedExecutor {
 }
 ```
 
-#### 1.2 重構工具定義
-- 將 93 個工具映射到 5-8 個核心工具
-- 保持向後兼容：舊工具名稱作為 action 參數
+#### 1.2 Refactor Tool Definitions
+- Map 93 tools to 5-8 core tools
+- Maintain backward compatibility: old tool names as action parameters
 
-#### 1.3 更新 inputSchema
-- 使用 JSON Schema 的 oneOf 或 anyOf
-- 根據 operation 動態驗證 params
+#### 1.3 Update inputSchema
+- Use JSON Schema's oneOf or anyOf
+- Dynamically validate params based on operation
 
-### Phase 2: Skill 創建 (Week 2-3)
+### Phase 2: Skill Creation (Week 2-3)
 
-#### 2.1 編寫 SKILL.md
-- 簡潔的觸發詞和描述
-- 分類操作指南的導航
+#### 2.1 Write SKILL.md
+- Concise triggers and description
+- Navigation to categorized operation guides
 
-#### 2.2 編寫 workflows
-- 每個操作類別一個 markdown
-- 包含常見用例和範例
+#### 2.2 Write workflows
+- One markdown per operation category
+- Include common use cases and examples
 
-#### 2.3 編寫 reference
-- 完整的 action 映射表
-- 權限和錯誤代碼參考
+#### 2.3 Write reference
+- Complete action mapping table
+- Permission and error code references
 
-### Phase 3: 整合測試 (Week 3-4)
+### Phase 3: Integration Testing (Week 3-4)
 
-#### 3.1 Token 測量
-- 測量新架構的實際 token 消耗
-- 與原架構比較
+#### 3.1 Token Measurement
+- Measure actual token consumption of new architecture
+- Compare with original architecture
 
-#### 3.2 功能測試
-- 確保所有原有功能正常運作
-- 測試 Skill 的漸進式載入
+#### 3.2 Functional Testing
+- Ensure all original functionality works correctly
+- Test Skill's progressive loading
 
-#### 3.3 用戶體驗測試
-- 驗證 Claude 能正確選擇工具
-- 測試複雜工作流程
+#### 3.3 User Experience Testing
+- Verify Claude selects tools correctly
+- Test complex workflows
 
-## 工具映射表
+## Tool Mapping Table
 
-### 原有工具 → 新工具對照
+### Original Tool → New Tool Mapping
 
-| 原有工具 | 新工具調用方式 |
-|---------|---------------|
+| Original Tool | New Tool Call |
+|---------------|---------------|
 | `send_message` | `discord_execute({ operation: 'message', action: 'send', ... })` |
 | `edit_message` | `discord_execute({ operation: 'message', action: 'edit', ... })` |
 | `delete_message` | `discord_execute({ operation: 'message', action: 'delete', ... })` |
@@ -249,41 +249,41 @@ export class UnifiedExecutor {
 | `bulk_delete_messages` | `discord_batch({ operations: [...] })` |
 | ... | ... |
 
-## 預期效果
+## Expected Results
 
-### Token 消耗比較
+### Token Consumption Comparison
 
-| 架構 | 工具數 | Token 消耗 | 備註 |
-|------|--------|-----------|------|
-| 原有 MCP | 93 | ~17,200 | 全量載入 |
-| 精簡 MCP | 5-8 | ~2,000 | 核心工具 |
-| Skill 元數據 | - | ~100 | 漸進式 |
-| **混合架構** | **5-8** | **~2,100** | **減少 88%** |
+| Architecture | Tool Count | Token Usage | Notes |
+|--------------|------------|-------------|-------|
+| Original MCP | 93 | ~17,200 | Full preload |
+| Streamlined MCP | 5-8 | ~2,000 | Core tools |
+| Skill metadata | - | ~100 | Progressive |
+| **Hybrid Architecture** | **5-8** | **~2,100** | **88% reduction** |
 
-### 其他效益
-1. **工具選擇準確度提升**: 工具數量 <10，Claude 選擇準確
-2. **可維護性提升**: Skill 指令易於更新，不需重啟 MCP
-3. **擴展性**: 新功能只需添加 Skill workflow，無需修改 MCP
-4. **用戶體驗**: 通過 Skill 提供更好的使用指引
+### Other Benefits
+1. **Improved tool selection accuracy**: <10 tools, Claude selects accurately
+2. **Better maintainability**: Skill instructions easy to update, no MCP restart needed
+3. **Extensibility**: New features only need new Skill workflow, no MCP changes
+4. **User experience**: Better guidance through Skill documentation
 
-## 替代方案比較
+## Alternative Approaches Comparison
 
-| 方案 | Token 減少 | 複雜度 | 維護成本 |
-|------|-----------|--------|---------|
-| 僅合併工具 | 15-20% | 低 | 低 |
-| Tool Search Tool | 85% | 中 | 中 |
-| **MCP + Skill 混合** | **88%** | **中** | **低** |
-| 純 Code Execution | 98% | 高 | 高 |
+| Approach | Token Reduction | Complexity | Maintenance Cost |
+|----------|-----------------|------------|------------------|
+| Tool merging only | 15-20% | Low | Low |
+| Tool Search Tool | 85% | Medium | Medium |
+| **MCP + Skill Hybrid** | **88%** | **Medium** | **Low** |
+| Pure Code Execution | 98% | High | High |
 
-## 結論
+## Conclusion
 
-MCP + Skill 混合架構是最佳平衡方案：
-- 保留 MCP 的外部連接能力
-- 利用 Skill 的漸進式披露減少 token
-- 通過 Skill 提供結構化的使用指引
-- 維護成本較低，易於迭代
+The MCP + Skill hybrid architecture is the optimal balanced solution:
+- Retains MCP's external connectivity
+- Uses Skill's progressive disclosure to reduce tokens
+- Provides structured usage guidance through Skill
+- Lower maintenance cost, easy to iterate
 
-## 參考資料
+## References
 
 - [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
 - [Anthropic: Equipping agents with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
