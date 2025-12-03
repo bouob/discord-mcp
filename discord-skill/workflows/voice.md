@@ -10,6 +10,8 @@
 | stop | Stop audio playback | guildId |
 | set_volume | Set volume (0-200) | guildId, volume |
 
+> **Note**: `volume` accepts both number (`50`) and string (`"50"`).
+
 ## Queries via `discord_query`
 
 | Resource | Filters | Description |

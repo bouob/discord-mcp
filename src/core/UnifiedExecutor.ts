@@ -52,6 +52,43 @@ export interface BatchResult {
 }
 
 /**
+ * Parameters that should be converted to strings
+ */
+const STRING_PARAMS = ['count', 'limit', 'position', 'volume'];
+
+/**
+ * Parameter aliases (user-friendly → actual API parameter)
+ */
+const PARAM_ALIASES: Record<string, string> = {
+  'limit': 'count',
+  'content': 'message',
+  'text': 'message',
+};
+
+/**
+ * Normalize parameters to match API expectations
+ * - Converts numbers to strings where required
+ * - Maps aliases to actual parameter names
+ */
+function normalizeParams(params: Record<string, unknown>): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(params)) {
+    // Apply alias mapping
+    const actualKey = PARAM_ALIASES[key] || key;
+
+    // Convert to string if needed
+    if (STRING_PARAMS.includes(actualKey) && typeof value === 'number') {
+      normalized[actualKey] = String(value);
+    } else {
+      normalized[actualKey] = value;
+    }
+  }
+
+  return normalized;
+}
+
+/**
  * UnifiedExecutor provides a streamlined interface for Discord operations
  */
 export class UnifiedExecutor {
@@ -84,8 +121,11 @@ export class UnifiedExecutor {
       };
     }
 
+    // Normalize parameters (convert numbers to strings, apply aliases)
+    const normalizedParams = normalizeParams(actionParams || {});
+
     // Resolve action to method
-    const resolved = resolveAction(operation, action, actionParams || {});
+    const resolved = resolveAction(operation, action, normalizedParams);
     if (!resolved) {
       return {
         success: false,
@@ -132,8 +172,11 @@ export class UnifiedExecutor {
       queryFilters.limit = limit;
     }
 
+    // Normalize parameters (convert numbers to strings, apply aliases)
+    const normalizedFilters = normalizeParams(queryFilters);
+
     // Resolve query to method
-    const resolved = resolveQuery(resource, queryFilters);
+    const resolved = resolveQuery(resource, normalizedFilters);
     if (!resolved) {
       return {
         success: false,

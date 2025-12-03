@@ -18,9 +18,12 @@
 
 | Resource | Filters | Description |
 |----------|---------|-------------|
-| messages | channelId, limit, before, after | Get message history |
+| message_history | channelId, count/limit, before, after | Full message history with pagination |
+| messages | channelId, count/limit | Read recent messages |
 | pinned_messages | channelId | Get pinned messages |
 | attachments | channelId, messageId | Get message attachments |
+
+> **Note**: `count` accepts both number (`30`) and string (`"30"`). You can also use `limit` as an alias for `count`.
 
 ## Examples
 
@@ -74,11 +77,22 @@
 ### Query message history
 ```json
 {
-  "resource": "messages",
+  "resource": "message_history",
   "filters": {
     "channelId": "123456789",
     "limit": 100,
     "before": "last_message_id"
+  }
+}
+```
+
+### Read recent messages
+```json
+{
+  "resource": "messages",
+  "filters": {
+    "channelId": "123456789",
+    "limit": 30
   }
 }
 ```
