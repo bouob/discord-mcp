@@ -25,7 +25,7 @@ import { DiscordService } from './discord-service.js';
 import { AutomationManager } from './core/AutomationManager.js';
 import { DiscordController } from './core/DiscordController.js';
 import { UnifiedExecutor, createUnifiedExecutor } from './core/UnifiedExecutor.js';
-import { CORE_TOOLS, getAllCoreTools, getOperationHelp, estimateTokenCount } from './tools/CoreTools.js';
+import { CORE_TOOLS, getAllCoreTools, getOperationHelp } from './tools/CoreTools.js';
 
 // Check for legacy mode
 const USE_LEGACY_MODE = process.env.DISCORD_MCP_LEGACY === 'true';
@@ -42,8 +42,6 @@ if (USE_LEGACY_MODE) {
 
 async function runHybridServer() {
   console.error('[Discord MCP] Running in HYBRID mode (3 core tools)');
-  const tokenStats = estimateTokenCount();
-  console.error(`[Discord MCP] Token reduction: ${tokenStats.legacy} → ${tokenStats.core} (${tokenStats.reduction})`);
 
   const server = new Server(
     {
