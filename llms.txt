@@ -1,0 +1,27 @@
+# discord-mcp
+
+> MCP server that lets LLM agents manage Discord servers (messages, channels, roles, moderation, threads, voice, webhooks, events) through four tools: discord_execute, discord_query, discord_batch, discord_help. A two-tool Code Mode (DISCORD_MCP_MODE=codemode: discord_search + discord_execute over the Discord OpenAPI spec, sandboxed, read-only by default) is also available.
+
+All IDs are strings. Most server-scoped actions accept an optional guildId that falls back to DISCORD_GUILD_ID. Some moderation and thread actions have known argument-order bugs; read the usage guide before calling them.
+
+## Docs
+
+- [Usage guide for LLM agents](docs/llm-usage.md): workflow, conventions, batch semantics, actions to avoid, safety rules, Code Mode (search first, then execute; how denials look)
+- [Action reference](discord-skill/reference/api-actions.md): operations, actions and parameters
+- [Configuration](docs/configuration.md): environment variables, transports, Code Mode policy settings and evaluation order
+- [README](README.md): install, MCP client setup, bot permissions, known issues, roadmap
+
+## Workflows
+
+- [Messaging](discord-skill/workflows/messaging.md)
+- [Channel management](discord-skill/workflows/channel-management.md)
+- [Roles](discord-skill/workflows/roles.md)
+- [Moderation](discord-skill/workflows/moderation.md)
+- [Threads](discord-skill/workflows/threads.md)
+- [Voice](discord-skill/workflows/voice.md)
+- [Webhooks](discord-skill/workflows/webhooks.md)
+- [Events](discord-skill/workflows/events.md)
+
+## Optional
+
+- [Agent skill entry point](discord-skill/SKILL.md)
